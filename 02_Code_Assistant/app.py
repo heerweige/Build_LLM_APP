@@ -17,7 +17,7 @@ if "messages" not in st.session_state:
 with st.sidebar:
     LLM_option = st.selectbox(
         '选择大模型引擎',
-        ('gpt-3.5-turbo', 'gpt-4','codegemma'))
+        ('qwen2.5-72b-instruct', 'qwen-plus', 'qwen-turbo'))
     
     language = st.selectbox(
         '选择代码语言',
