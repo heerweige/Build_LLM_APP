@@ -12,11 +12,18 @@ class DataAI:
     def __init__(self,data):
         self.df = data
         self.parser = StrOutputParser()
-        self.llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+        self.llm = ChatOpenAI(
+            model_name="qwen-plus",#可以根据参数列表更换模型名称。如"qwen-2.5""
+            temperature=0,
+            api_key='sk-7ad9d51e442b42c585b01c817272107a',  # 确保 API 密钥是字符串，换成大家自己的api
+            base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+        )
+        
         self.agent = create_pandas_dataframe_agent(self.llm, self.df, agent_type="openai-tools", verbose=True,allow_dangerous_code=True)
 
     def create_questions(self):
-        prompt = """you are a data scientist. you should create a data analysis report to get insights based on the data information provided. 
+        prompt = """
+            you are a data scientist. you should create a data analysis report to get insights based on the data information provided. 
             step 1: think and write some questions for this data analysis report.
             step 2: Structure the output information as a JSON as follows.
             Example:
@@ -45,10 +52,10 @@ class DataAI:
         self.report = chain.invoke({"analysis_result": self.analysis_result})
 
 
-if __name__ == "__main__":
-    data = pd.read_excel("Titanic.xlsx")
-    dataAI = DataAI(data)
-    print(dataAI.ask_question("What is the survival rate?"))
+# if __name__ == "__main__":
+#     data = pd.read_excel("Titanic.xlsx")
+#     dataAI = DataAI(data)
+#     print(dataAI.ask_question("What is the survival rate?"))
     # Is there a notable difference in survival based on the sex?
     # dataAI.create_questions()
     # dataAI.answer_questions()

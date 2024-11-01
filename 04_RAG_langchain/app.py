@@ -13,27 +13,32 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 def ready_asistant():
-
     st.session_state["assistant"] = ChatDoc()
 
     for file in st.session_state["file_uploader"]:
+        print(f"Uploaded file: {file.name}")  # 添加调试信息
         with tempfile.NamedTemporaryFile(delete=False) as tf:
             tf.write(file.getbuffer())
             file_path = tf.name
 
-        with st.session_state["ingestion_spinner"], st.spinner(f"Ingesting {file.name}"):
-            st.session_state["assistant"].ingest(file_path)
-        os.remove(file_path)
+        try:
+            with st.session_state["ingestion_spinner"], st.spinner(f"Ingesting {file.name}"):
+                st.session_state["assistant"].ingest(file_path)
+        except Exception as e:
+            st.error(f"Error loading file: {e}")
+        finally:
+            os.remove(file_path)
+
 
 
 files = st.file_uploader(
-        "Upload document",
-        type=["pdf"],
-        key="file_uploader",
-        on_change=ready_asistant,
-        label_visibility="collapsed",
-        accept_multiple_files=True,
-    )
+    "Upload document",
+    type=["pdf", "txt"],  # 修正这里
+    key="file_uploader",
+    on_change=ready_asistant,
+    label_visibility="collapsed",
+    accept_multiple_files=True,
+)
 
 st.session_state["ingestion_spinner"] = st.empty()
 

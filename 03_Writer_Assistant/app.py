@@ -5,7 +5,7 @@ import ai
 st.title('💬十分钟编写大模型应用')
 st.caption("🚀 中英双语写作助手")
 
-keys_to_initialize = ["improve_write", "fix_grammar", "new_article"]
+keys_to_initialize = ["improve_write", "fix_grammar", "new_article"] #功能选择界面
 for key in keys_to_initialize:
     if key not in st.session_state:
         st.session_state[key] = ""
@@ -17,7 +17,7 @@ if "writeAI" not in st.session_state:
 with st.sidebar:
     LLM_option = st.selectbox(
         '选择大模型引擎',
-        ('gpt-3.5-turbo', 'gpt-4','llama3'))
+        ('qwen2.5-72b-instruct', 'qwen-plus', 'qwen-turbo'))
 
     st.session_state["writeAI"].set_model(LLM_option)
 
@@ -61,7 +61,4 @@ with tab3:
         
 
     st.markdown(st.session_state["new_article"])
-
-
-
 
